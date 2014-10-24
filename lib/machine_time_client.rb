@@ -3,7 +3,7 @@ require 'yaml'
 
 module MachineTimeClient
 	@default_machine = 'Cameca IMF-1270'
-	@default_uri = 'http://database.misasa.okayama-u.ac.jp/machine-time/'
+	@default_uri = 'http://database.misasa.okayama-u.ac.jp/machine/'
 	DEFAULT_CONFIG = {:uri => @default_uri, :machine => @default_machine }
 
   	@pref_path = nil
