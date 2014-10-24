@@ -8,10 +8,6 @@ module MachineTimeClient
 	describe ".site" do
 		it { expect(MachineTimeClient.site).to include("http://")}
 	end
-
-	describe Machine, :current => true do
-		it { expect(Machine.all).to be_nil }
-	end
 	# describe Server do
 	# 	it { expect("hello").to eql("hello") }
 	# end

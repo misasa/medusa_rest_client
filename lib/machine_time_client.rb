@@ -1,5 +1,4 @@
 require "machine_time_client/version"
-require "active_resource"
 require 'yaml'
 
 module MachineTimeClient
@@ -14,14 +13,14 @@ module MachineTimeClient
 	end
 
 	@config = nil
-	def self.config=(config) @config = config end
+	def self.config=(config)
+		@config = config
+	end
+
 	def self.config
 		load_config unless @config
 		@config
 	end
-
-
-
 
 	def self.load_config
 		begin
