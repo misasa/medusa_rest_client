@@ -1,6 +1,6 @@
 # MachineTimeClient
 
-TODO: Write a gem description
+This is a client application for MachineTime
 
 ## Installation
 

@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = MachineTimeClient::VERSION
   spec.authors       = ["Yusuke Yachi"]
   spec.email         = ["yusuke.yachi@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Client application for MachineTime.}
+  spec.description   = %q{This is a client application for MachineTime.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
