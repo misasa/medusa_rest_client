@@ -1,6 +1,6 @@
 # MachineTimeClient
 
-This is a client application for MachineTime
+Provide clients for MachineSentinel
 
 ## Installation
 
