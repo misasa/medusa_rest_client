@@ -1,6 +1,6 @@
 # MachineTimeClient
 
-Provide clients for MachineSentinel
+Provide Ruby API via gem that interacts with MachineSentinel
 
 ## Installation
 
@@ -17,9 +17,13 @@ Or install it yourself as:
     $ gem source -a http://dream.misasa.okayama-u.ac.jp/rubygems
     $ gem install machine_time_client
 
+## Commands
+
+No command is installed by this gem.
+
 ## Usage
 
-TODO: Write usage instructions here
+See specfile how to call Ruby API.
 
 ## Contributing
 
