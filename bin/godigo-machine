@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
-require 'machine_time_client'
+require 'machine_time_client/runner'
 
 MachineTimeClient::Runner.new.run(ARGV, :command_name => "machine_command", :program_name => "godigo-machine")

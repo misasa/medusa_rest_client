@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'machine_time_client'
+require 'machine_time_client/runner'
 
 argv = ARGV.clone
 argv.unshift("-o")
