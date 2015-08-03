@@ -3,8 +3,20 @@ require "machine_time_client"
 require 'machine_time_client/session'
 module MachineTimeClient
   class Machine < ActiveResource::Base
-  	self.site = MachineTimeClient.site
-  	self.prefix = MachineTimeClient.prefix
+	self.site = MachineTimeClient.site
+	self.prefix = MachineTimeClient.prefix
+
+	def self.config
+		MachineTimeClient.config
+	end
+
+	def self.instance
+		find_by_name(MachineTimeClient.machine_name)
+	end
+
+	def self.is_running?
+		instance.is_running?
+	end
 
   	def self.action_path(id, action, prefix_options = {}, query_options = nil)
   		check_prefix_options(prefix_options)
@@ -33,6 +45,15 @@ module MachineTimeClient
 	def current_session
 		Session.find(:one, :from => action_path('current_session', prefix_options))
 	end
+
+	def is_running?
+		current_session.respond_to?(:global_id)
+	end
+
+	def self.find_by_name(name)
+		all.find{|obj| obj.name == name}
+	end
+
 
   end
 end

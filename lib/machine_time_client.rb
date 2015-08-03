@@ -1,15 +1,18 @@
 require "machine_time_client/version"
+#require 'machine_time_client/machine'
+#require 'machine_time_client/session'
 require 'yaml'
 
 module MachineTimeClient
-	@default_machine = 'Cameca IMF-1270'
+	@default_machine = 'JXA-8800'
 	@default_uri = 'http://database.misasa.okayama-u.ac.jp/machine/'
-	DEFAULT_CONFIG = {:uri => @default_uri, :machine => @default_machine }
+	DEFAULT_CONFIG = {:uri_machine => @default_uri, :machine => @default_machine }
 
   	@pref_path = nil
 	def self.pref_path=(pref_path) @pref_path = pref_path end
 	def self.pref_path
 		@pref_path ||= "~/.machinerc"
+#		@pref_path ||= "~/.orochirc"
 	end
 
 	@config = nil
@@ -32,6 +35,7 @@ module MachineTimeClient
   	end
 
 	def self.read_config
+	  	raise("Orochi configuration file is missing in |#{pref_path}|.  Install properly.") if !File.exist?(File.expand_path(pref_path))
 		config = YAML.load(File.read(File.expand_path(pref_path)))
 	end
 
@@ -62,12 +66,23 @@ module MachineTimeClient
 
 	def self.uri
 		uri_string = @default_uri
-		if config.has_key?(:uri)
-			uri_string = config[:uri]
+		if config.has_key?(:uri_machine)
+			uri_string = config[:uri_machine]
+		else
+			raise "Orochi configuration file |#{pref_path}| does not have parameter |uri_machine|.  Put a line such like |uri_machine: #{@default_uri}|."
 		end
 		uri_string = "http://" + uri_string unless (/:\/\// =~ uri_string)
 		uri_string = uri_string + "/" unless (/\/\z/ =~ uri_string)
 		URI.parse(uri_string)
 	end
+
+	def self.machine_name
+		raise "Orochi configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|." unless config.has_key?(:machine)
+		config[:machine]
+	end
   # Your code goes here...
+require 'machine_time_client/machine'
+require 'machine_time_client/session'
+ActiveResource::Base.logger = Logger.new($stderr)
+
 end

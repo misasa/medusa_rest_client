@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'machine_time_client'
+
+MachineTimeClient::Runner.new.run(ARGV, :command_name => "machine_command")
