@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require 'machine_time_client/runner'
+
+argv = ARGV.clone
+argv.unshift("sync")
+MachineTimeClient::Runner.new.run(argv, :command_name => "machine_command", :program_name => "godigo-machine-sync")
