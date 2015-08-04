@@ -11,7 +11,7 @@ module MachineTimeClient
   	@pref_path = nil
 	def self.pref_path=(pref_path) @pref_path = pref_path end
 	def self.pref_path
-		@pref_path ||= "~/.machinerc"
+		@pref_path ||= "~/.godigorc"
 #		@pref_path ||= "~/.orochirc"
 	end
 
