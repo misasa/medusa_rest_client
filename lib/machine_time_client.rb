@@ -51,6 +51,8 @@ module MachineTimeClient
   	def self.default_machine
   		if config.has_key?(:machine)
   		  	config[:machine]
+  		elsif config.has_key?('machine')
+  			config['machine']
   		else
   			@default_machine
   		end
@@ -86,7 +88,6 @@ module MachineTimeClient
 		else
 			raise "Orochi configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|."
 		end
-
 		name
 	end
   # Your code goes here...
