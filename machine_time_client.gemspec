@@ -32,5 +32,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "factory_girl", "~> 4.4"
   spec.add_development_dependency "fakeweb", "~> 1.3"
   spec.add_development_dependency "fakeweb-matcher", "~> 1.2"  
-  spec.add_dependency "unindent"  
 end

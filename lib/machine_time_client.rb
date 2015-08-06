@@ -4,7 +4,7 @@ require "machine_time_client/version"
 require 'yaml'
 
 module MachineTimeClient
-	@default_machine = 'JXA-8800'
+	@default_machine = 'MACHINE-1'
 	@default_uri = 'http://database.misasa.okayama-u.ac.jp/machine/'
 	DEFAULT_CONFIG = {:uri_machine => @default_uri, :machine => @default_machine }
 
@@ -68,6 +68,8 @@ module MachineTimeClient
 		uri_string = @default_uri
 		if config.has_key?(:uri_machine)
 			uri_string = config[:uri_machine]
+		elsif config.has_key?('uri_machine')
+			uri_string = config['uri_machine']
 		else
 			raise "Orochi configuration file |#{pref_path}| does not have parameter |uri_machine|.  Put a line such like |uri_machine: #{@default_uri}|."
 		end
@@ -77,8 +79,15 @@ module MachineTimeClient
 	end
 
 	def self.machine_name
-		raise "Orochi configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|." unless config.has_key?(:machine)
-		config[:machine]
+		if config.has_key?(:machine)
+			name = config[:machine]
+		elsif config.has_key?('machine')
+			name = config['machine']
+		else
+			raise "Orochi configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|."
+		end
+
+		name
 	end
   # Your code goes here...
 require 'machine_time_client/machine'
