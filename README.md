@@ -1,8 +1,8 @@
-# MachineTimeClient
+# machine_time_client
 
 Provide Ruby API via gem that interacts with MachineSentinel
 
-## Installation
+# Installation
 
 Add this line to your application's Gemfile:
 
@@ -17,15 +17,15 @@ Or install it yourself as:
     $ gem source -a http://dream.misasa.okayama-u.ac.jp/rubygems
     $ gem install machine_time_client
 
-## Commands
+# Commands
 
 No command is installed by this gem.
 
-## Usage
+# Usage
 
 See specfile how to call Ruby API.
 
-## Contributing
+# Contributing
 
 1. Fork it ( http://github.com/<my-github-username>/machine_time_client/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
