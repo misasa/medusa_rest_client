@@ -35,7 +35,7 @@ module MachineTimeClient
   	end
 
 	def self.read_config
-	  	raise("Orochi configuration file is missing in |#{pref_path}|.  Install properly.") if !File.exist?(File.expand_path(pref_path))
+	  	raise("Godigo configuration file is missing in |#{pref_path}|.  Install properly.") if !File.exist?(File.expand_path(pref_path))
 		config = YAML.load(File.read(File.expand_path(pref_path)))
 	end
 
@@ -73,7 +73,7 @@ module MachineTimeClient
 		elsif config.has_key?('uri_machine')
 			uri_string = config['uri_machine']
 		else
-			raise "Orochi configuration file |#{pref_path}| does not have parameter |uri_machine|.  Put a line such like |uri_machine: #{@default_uri}|."
+			raise "Godigo configuration file |#{pref_path}| does not have parameter |uri_machine|.  Put a line such like |uri_machine: #{@default_uri}|."
 		end
 		uri_string = "http://" + uri_string unless (/:\/\// =~ uri_string)
 		uri_string = uri_string + "/" unless (/\/\z/ =~ uri_string)
@@ -86,7 +86,7 @@ module MachineTimeClient
 		elsif config.has_key?('machine')
 			name = config['machine']
 		else
-			raise "Orochi configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|."
+			raise "Godigo configuration file |#{pref_path}| does not have parameter |machine|.  Put a line such like |machine: #{@default_machine}|."
 		end
 		name
 	end
