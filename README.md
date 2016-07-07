@@ -1,6 +1,6 @@
 # machine_time_client
 
-Provide Ruby API via gem that interacts with MachineSentinel.  This is referred by [godigo](http://devel.misasa.okayama-u.ac.jp/gitlab/gems/godigo/tree/master "follow instruction").
+Provide Ruby API via gem that interacts with MachineSentinel.  This is referred by [godigo](https://github.com/misasa/godigo "follow instruction").
 
 
 # Installation
@@ -24,12 +24,4 @@ No command is installed by this gem.
 
 # Usage
 
-See specfile how to call Ruby API.
-
-# Contributing
-
-1. Fork it ( http://github.com/<my-github-username>/machine_time_client/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+See specfile to tell how to call Ruby API.
