@@ -1,6 +1,6 @@
 # machine_time_client
 
-Provide Ruby API via gem that interacts with MachineSentinel.
+Provide Ruby API via gem that interacts with Machinegazer.
 
 This is referred by [godigo](https://github.com/misasa/godigo "follow instruction").
 
