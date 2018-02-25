@@ -1,7 +1,8 @@
 # machine_time_client
 
-Provide Ruby API via gem that interacts with MachineSentinel.  This is referred by [godigo](https://github.com/misasa/godigo "follow instruction").
+Provide Ruby API via gem that interacts with MachineSentinel.
 
+This is referred by [godigo](https://github.com/misasa/godigo "follow instruction").
 
 # Installation
 
