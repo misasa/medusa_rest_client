@@ -1,6 +1,6 @@
 # machine_time_client
 
-Provide Ruby API via gem that interacts with Machinegazer.
+Ruby package to connect `machine_time` object and machine-gazer's RESTful web service.
 
 This is referred by [godigo](https://github.com/misasa/godigo "follow instruction").
 
