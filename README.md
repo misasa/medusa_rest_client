@@ -9,6 +9,7 @@ the Rails's RESTful conventions, so this gem uses [ActiveResource][]
 to interact with the machine-gazer REST API.  This gem allows Ruby developers
 to programmatically  access the API and provides some useful functions
 to manage `machine_time` object on the machine-gazer programmatically.
+
 This is referred by [gem package -- godigo](https://github.com/misasa/godigo "follow instruction").
 
 [machine-gazer]: https://github.com/misasa/machine_time        "machine-gazer"
