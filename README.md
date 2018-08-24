@@ -3,6 +3,7 @@
 Ruby package to connect `machine_time` object and machine-gazer's RESTful web service.
 
 # Description 
+Ruby package to connect `machine_time` object and machine-gazer's RESTful web service.
 A client for interacting with [machine-gazer][] by REST.  machine-gazer REST API follows
 the Rails's RESTful conventions, so this gem uses [ActiveResource][]
 to interact with the machine-gazer REST API.  This gem allows Ruby developers
