@@ -1,16 +1,21 @@
-# machine_time_client
+# gem package -- machine_time_client
 
-Ruby package to connect `machine_time` object and machine-gazer's RESTful web service.
+Ruby library to connect `machine_time` object and machine-gazer's
+RESTful web service.
 
 # Description 
-Ruby package to connect `machine_time` object and machine-gazer's RESTful web service.
-A client for interacting with [machine-gazer][] by REST.  machine-gazer REST API follows
-the Rails's RESTful conventions, so this gem uses [ActiveResource][]
-to interact with the machine-gazer REST API.  This gem allows Ruby developers
-to programmatically  access the API and provides some useful functions
-to manage `machine_time` object on the machine-gazer programmatically.
 
-This is referred by [gem package -- godigo](https://github.com/misasa/godigo "follow instruction").
+Ruby package to connect `machine_time` object and machine-gazer's
+RESTful web service.  A client for interacting with [machine-gazer][]
+by REST.  machine-gazer REST API follows the Rails's RESTful
+conventions, so this gem uses [ActiveResource][] to interact with the
+machine-gazer REST API.  This gem allows Ruby developers to
+programmatically access the API and provides some useful functions to
+manage `machine_time` object on the machine-gazer programmatically.
+
+See
+[gem package -- godigo](https://github.com/misasa/godigo "follow instruction")
+that refers to this library.
 
 [machine-gazer]: https://github.com/misasa/machine_time        "machine-gazer"
 [ActiveResource]: https://github.com/rails/activeresource/ "ActiveResource"
