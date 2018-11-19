@@ -15,7 +15,7 @@ manage `machine_time` object on the machine-gazer programmatically.
 
 See
 [gem package -- godigo](https://github.com/misasa/godigo "follow instruction")
-that refers to this library.
+that refers to this package.
 
 # Installation
 
