@@ -27,11 +27,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem source -a http://dream.misasa.okayama-u.ac.jp/rubygems
-    $ gem install machine_time_client
-
 # Commands
 
 No command is installed by this gem.
