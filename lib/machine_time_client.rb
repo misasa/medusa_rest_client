@@ -3,6 +3,14 @@ require "machine_time_client/version"
 #require 'machine_time_client/session'
 require 'yaml'
 
+module Warning
+  def warn(str)
+    return if str.match?("gems")
+
+    super
+  end
+end
+
 module MachineTimeClient
 	@default_machine = 'MACHINE-1'
 	@default_uri = 'http://database.misasa.okayama-u.ac.jp/machine/'
