@@ -83,7 +83,7 @@ FactoryGirl.find_definitions
 Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
 
 def setup
-  MedusaRestClient::Base.site = "http://localhost:3000"
+  MedusaRestClient::Base.site = "http://app:3002"
   MedusaRestClient::Base.prefix = "/"
   MedusaRestClient::Base.user = "dream.misasa"
   MedusaRestClient::Base.password = "password"

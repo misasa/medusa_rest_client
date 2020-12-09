@@ -2,6 +2,7 @@ require 'logger'
 require 'active_resource'
 require 'yaml'
 require 'pathname'
+require 'tempfile'
 
 module Warning
   def warn(str)
