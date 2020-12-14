@@ -16,7 +16,7 @@ and [gem package -- pmlatex](https://github.com/misasa/pmlatex).
 
 # Requirements
 
-MedusaRestClient 0.2 supports Ruby 2.5, 2.6, and 2.7.
+Ruby 2.5, 2.6, and 2.7.
 
 # Installation
 
