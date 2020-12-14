@@ -14,6 +14,9 @@ to manage records on the Medusa programmatically.
 This package is referred by [gem package -- sisyphus-for-medusa](https://github.com/misasa/sisyphus-for-medusa)
 and [gem package -- pmlatex](https://github.com/misasa/pmlatex).
 
+# Requirements
+
+MedusaRestClient 0.2 supports Ruby 2.5, 2.6, and 2.7.
 
 # Installation
 
