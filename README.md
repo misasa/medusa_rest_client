@@ -16,7 +16,7 @@ and [gem package -- pmlatex](https://github.com/misasa/pmlatex).
 
 # Requirements
 
-Ruby 2.5, 2.6, and 2.7.
+Ruby 2.5, 2.6, or 2.7.
 
 # Installation
 
