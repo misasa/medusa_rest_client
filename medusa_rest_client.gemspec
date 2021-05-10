@@ -19,7 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
 #  spec.add_runtime_dependency 'bigdecimal', "~> 1.4"
-  spec.add_runtime_dependency 'activeresource', '~> 5.1'
+#  spec.add_runtime_dependency 'activeresource', '~> 5.1'
+  spec.add_runtime_dependency 'activeresource'
   spec.add_runtime_dependency 'rails-observers'
   spec.add_runtime_dependency 'pry', '~> 0.9'
   spec.add_runtime_dependency 'gli', '~> 2.12'
