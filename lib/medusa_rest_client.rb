@@ -12,6 +12,27 @@ module Warning
   end
 end
 
+module ActiveResource
+  class Base
+    def self.prefix=(value = "/")
+      prefix_call = value.gsub(/:\w+/) { |key| "\#{URI::DEFAULT_PARSER.escape options[#{key}].to_s}" }
+
+      # Clear prefix parameters in case they have been cached
+      @prefix_parameters = nil
+      silence_warnings do
+        # Redefine the new methods.
+        instance_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
+          def prefix_source() "#{value}" end
+          def prefix(options={}) "#{prefix_call}" end
+        RUBY_EVAL
+      end
+    rescue Exception => e
+      logger.error "Couldn't set prefix: #{e}\n  #{code}" if logger
+      raise      
+    end
+  end
+end
+
 module MedusaRestClient
   # Your code goes here...
   @pref_path = nil
