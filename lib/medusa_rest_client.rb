@@ -64,7 +64,15 @@ module MedusaRestClient
   end
 
   def self.read_config
-    YAML.load(File.read(File.expand_path(pref_path)))
+    begin
+      path = File.expand_path(File.basename(pref_path))
+      #p path + " reading..."
+      YAML.load(File.read(path))
+    rescue => ex
+      path = File.expand_path(pref_path)
+      #p path + " reading..."
+      YAML.load(File.read(File.expand_path(pref_path)))
+    end
   end
 
   def self.write_config
