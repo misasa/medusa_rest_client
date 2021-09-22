@@ -20,12 +20,21 @@ module MedusaRestClient
       obj
     end
 
+    def update_affine_matrix(affine_matrix = [1,0,0,0,1,0,0,0,1])
+
+      put(:update_affine_matrix,{}, ActiveSupport::JSON.encode({affine_matrix: affine_matrix}))
+    end
+
+    def update_corners(corners_on_world = {lu:[-50,33.4375], ru:[50.0, 33.4375], rb:[50.0, -33.4375], lb:[-50.0, -33.4375]})
+      put(:update_corners,{}, ActiveSupport::JSON.encode(attachment_file: self.attributes, corners_on_world: corners_on_world))
+    end
+
     def update_file(filepath, opts = {})
       raise "#{filepath} does not exist" unless File.exists?(filepath)
       self.file = filepath
       self.filename = opts[:filename] if opts[:filename]
       self.geo_path = opts[:geo_path] if opts[:geo_path]
-      data = to_multipart_form_data
+      data = to_multipart_form_data(opts)
       put_multipart_form_data(data)
     end
 

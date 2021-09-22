@@ -30,10 +30,19 @@ module MedusaRestClient
       layer
     end
 
-    def create_layer(layer_params)
-      layer = SurfaceLayer.new(layer_params)
-      layer.prefix_options[:surface_id] = self.id
-      layer.save
+#    def create_layer(layer_params)
+#      layer = SurfaceLayer.new(layer_params)
+#      layer.prefix_options[:surface_id] = self.id
+#      layer.save
+#    end
+
+    def create_layer(params)
+      prefix = self.class.prefix
+      collection_name = self.class.collection_name + '/' + self.id.to_s + '/layers'
+      path = "#{prefix}#{collection_name}#{self.class.format_extension}"
+      connection.post(path,ActiveSupport::JSON.encode({surface_layer: params})).tap do |response|
+        return response
+      end      
     end
 
     def create_spot(spot_params)
@@ -60,7 +69,7 @@ module MedusaRestClient
       prefix = self.class.prefix
       collection_name = self.class.collection_name + '/' + self.id.to_s + '/layers/' + layer_id.to_s + '/tiles'
       path = "#{prefix}#{collection_name}#{self.class.format_extension}"
-      connection.post(path,encode).tap do |response|
+      connection.post(path,ActiveSupport::JSON.encode({surface_layer: {id: layer_id}})).tap do |response|
         return response
       end      
     end
