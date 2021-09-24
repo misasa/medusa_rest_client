@@ -6,7 +6,7 @@ require 'fakeweb_matcher'
 #require 'simplecov-rcov'
 #SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 #SimpleCov.start
-
+ActiveResource::Base.logger = Logger.new(STDOUT) # 追記
 
 module FactoryGirl
   class RemoteStrategy
@@ -76,15 +76,15 @@ end
 Dir.glob("spec/support/**/*.rb") { |f| load f, true }
 
 
-FakeWeb.allow_net_connect = false
+FakeWeb.allow_net_connect = true
 
 include MedusaRestClient
 FactoryGirl.find_definitions
 Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
 
 def setup
-  MedusaRestClient::Base.site = "http://app:3002"
-  MedusaRestClient::Base.prefix = "/"
+  MedusaRestClient::Base.site = "http://app_development:3000"
+  MedusaRestClient::Base.prefix = "/stone/"
   MedusaRestClient::Base.user = "dream.misasa"
   MedusaRestClient::Base.password = "password"
   MedusaRestClient::Base.logger = Logger.new(STDOUT)
@@ -153,5 +153,5 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = [:should, :expect]
   end
-  config.deprecation_stream = 'log/deprecations.log'
+  #config.deprecation_stream = 'log/deprecations.log'
 end

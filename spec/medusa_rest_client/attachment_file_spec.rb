@@ -23,15 +23,22 @@ module MedusaRestClient
       end
     end
 
-    describe ".save with exsisting object" do
+    describe ".save with exsisting object", :current => true do
       let(:obj){ AttachmentFile.find(1) }
+      let(:obj2){ Specimen.find(1)}
       before do
         FactoryGirl.remote(:attachment_file, id: 1)
-        obj
+        FakeWeb.register_uri(:put, %r|/attachment_files/1.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])
+        FactoryGirl.remote(:specimen, id: 1)
+        FakeWeb.register_uri(:put, %r|/specimens/1.json|, :body => FactoryGirl.build(:specimen).to_json, :status => ["201", "Created"])
       end
       it "calls update" do
-        allow(obj).to receive(:update)
-        obj.save
+        #allow(obj).to receive(:update)
+        obj.affine_matrix_in_string = "[1,0,0;0,1,0;0,0,1]"
+        p obj.encode
+        obj2.save
+        expect(FakeWeb).to have_requested(:put, %r|/specimens/1.json|)
+        p FakeWeb.last_request.body
       end
     end
 
