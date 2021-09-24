@@ -103,7 +103,7 @@ module MedusaRestClient
     end   
   end
 
-  describe AttachmentFile do
+  describe AttachmentFile, :current => true do
     before do
       setup
       FakeWeb.clean_registry

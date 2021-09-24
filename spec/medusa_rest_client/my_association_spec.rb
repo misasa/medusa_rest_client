@@ -4,6 +4,11 @@ module MedusaRestClient
   describe MyAssociation do
 
     describe "without subclass" do
+      before do
+        setup
+        FakeWeb.clean_registry
+      end
+  
       let(:association){ MyAssociation.new(obj) }
       let(:obj) { Box.find(obj_id)}
       let(:obj_id) { 10 }
