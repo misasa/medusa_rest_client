@@ -5,11 +5,18 @@ module MedusaRestClient
     describe "self.get_affine_from_geo" do
       subject { AttachmentFile.get_affine_from_geo(geo_file)}
       let(:geo_file){ 'tmp/test_image.geo'  }
-      before do
-        setup_empty_dir('tmp')
-        setup_file(geo_file)
+      context "with array" do
+        it { 
+          allow(YAML).to receive(:load_file).with(geo_file).and_return({"affine_xy2vs" => [[10,0,0],[0,10,0],[0,0,1]]})
+          expect(subject).to be_eql("[10, 0, 0;0, 10, 0;0, 0, 1]")
+        }
       end
-      it { expect(subject).to be_eql("[10, 0, 0;0, 10, 0;0, 0, 1]")}
+      context "with affine_matrix_in_string" do
+        it { 
+          allow(YAML).to receive(:load_file).with(geo_file).and_return({"affine_xy2vs" => "[10, 0, 0;0, 10, 0;0, 0, 1]"})
+          expect(subject).to be_eql("[10, 0, 0;0, 10, 0;0, 0, 1]")
+        }
+      end
     end
 
     describe ".save with new object" do
