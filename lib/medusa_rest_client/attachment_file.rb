@@ -42,16 +42,23 @@ module MedusaRestClient
       if File.file?(filepath)
         geo = YAML.load_file(filepath)
         if geo.has_key?("affine_xy2vs")
-          array = geo["affine_xy2vs"]
-          return "[#{array.map{|a| a.join(', ')}.join(';')}]"
+          affine_xy2vs = geo["affine_xy2vs"]
+          if affine_xy2vs.is_a?(Array)
+            array = affine_xy2vs
+            affine_matrix_in_string = "[#{array.map{|a| a.join(', ')}.join(';')}]"
+          else
+            affine_matrix_in_string = affine_xy2vs
+          end
+          return affine_matrix_in_string
         end
       end
     end
 
     def dump_geofile(filepath, opts = {})
-      a,b,c,d,e,f,g,h,i = self.affine_matrix
+      #a,b,c,d,e,f,g,h,i = self.affine_matrix
       geo = Hash.new
-      geo['affine_xy2vs'] = [[a,b,c],[d,e,f],[g,h,i]]
+      #geo['affine_xy2vs'] = [[a,b,c],[d,e,f],[g,h,i]]
+      geo['affine_xy2vs'] = self.affine_matrix_in_string
       YAML.dump(geo,File.open(filepath,'w'))
     end
       # def self.find_by_localfile(mylocalfile)
