@@ -1,5 +1,5 @@
 module MedusaRestClient
-  VERSION = "0.4.0"
+  VERSION = "1.4.0"
   class VersionInfo
 
     def jruby?
