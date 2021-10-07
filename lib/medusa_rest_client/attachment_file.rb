@@ -41,8 +41,8 @@ module MedusaRestClient
     def self.get_affine_from_geo(filepath, opts = {})
       if File.file?(filepath)
         geo = YAML.load_file(filepath)
-        if geo.has_key?("affine_xy2vs")
-          affine_xy2vs = geo["affine_xy2vs"]
+        if geo.has_key?("affine_xy2vs") || geo.has_key?("imageometry")
+          affine_xy2vs = geo["affine_xy2vs"] || geo["imageometry"]
           if affine_xy2vs.is_a?(Array)
             array = affine_xy2vs
             affine_matrix_in_string = "[#{array.map{|a| a.join(', ')}.join(';')}]"
