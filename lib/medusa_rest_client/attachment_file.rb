@@ -58,7 +58,7 @@ module MedusaRestClient
       #a,b,c,d,e,f,g,h,i = self.affine_matrix
       geo = Hash.new
       #geo['affine_xy2vs'] = [[a,b,c],[d,e,f],[g,h,i]]
-      geo['affine_xy2vs'] = self.affine_matrix_in_string
+      geo['imageometry'] = self.affine_matrix_in_string
       YAML.dump(geo,File.open(filepath,'w'))
     end
       # def self.find_by_localfile(mylocalfile)
