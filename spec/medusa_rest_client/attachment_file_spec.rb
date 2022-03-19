@@ -2,20 +2,29 @@ require 'spec_helper'
 
 module MedusaRestClient
   describe AttachmentFile do
-    describe "self.get_affine_from_geo" do
+    describe "self.get_affine_from_geo", :current => true do
       subject { AttachmentFile.get_affine_from_geo(geo_file)}
       let(:geo_file){ 'tmp/test_image.geo'  }
       context "with array" do
         it { 
-          allow(YAML).to receive(:load_file).with(geo_file).and_return({"affine_xy2vs" => [[10,0,0],[0,10,0],[0,0,1]]})
-          expect(subject).to be_eql("[10, 0, 0;0, 10, 0;0, 0, 1]")
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
+          expect(YAML).to receive(:load_file).with(geo_file).and_return({"affine_xy2vs" => [[10,0,0],[0,10,0],[0,0,1]]})
+          subject
         }
       end
       context "with affine_matrix_in_string" do
         it { 
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
           allow(YAML).to receive(:load_file).with(geo_file).and_return({"affine_xy2vs" => "[10, 0, 0;0, 10, 0;0, 0, 1]"})
-          expect(subject).to be_eql("[10, 0, 0;0, 10, 0;0, 0, 1]")
+          subject
         }
+      end
+      context "with imageometry" do
+        it { 
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
+          allow(YAML).to receive(:load_file).with(geo_file).and_return({"imageometry" => "[12, 0, 0;0, 13, 0;0, 0, 1]"})
+          subject
+        }  
       end
     end
 
