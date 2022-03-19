@@ -38,9 +38,26 @@ module MedusaRestClient
       put_multipart_form_data(data)
     end
 
+    def self.get_corners_on_world_from_geo(filepath, opts = {})
+      if File.file?(filepath)
+        geo = YAML.load_file(filepath)
+        if geo.has_key?("anchors")
+          anchors = geo["anchors"]
+          if anchors.is_a?(Array) && anchors[0].is_a?(Hash) && anchors[0].has_key?("world")
+            corners_on_world = anchors.map{|anchor| anchor["world"].join(",")}.join(":")
+            return corners_on_world
+          end
+        end
+      end
+    end
+
     def self.get_affine_from_geo(filepath, opts = {})
       if File.file?(filepath)
         geo = YAML.load_file(filepath)
+        if geo.has_key?("anchors")
+          anchors = geo["anchors"]
+          #anchors.map{|anchor| anchor["world"].join(",")}.join(":")
+        end
         if geo.has_key?("affine_xy2vs") || geo.has_key?("imageometry")
           affine_xy2vs = geo["affine_xy2vs"] || geo["imageometry"]
           if affine_xy2vs.is_a?(Array)
