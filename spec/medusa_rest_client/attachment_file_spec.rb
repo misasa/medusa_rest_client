@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module MedusaRestClient
   describe AttachmentFile do
-    describe "self.get_affine_from_geo", :current => true do
+    describe "self.get_affine_from_geo" do
       subject { AttachmentFile.get_affine_from_geo(geo_file)}
       let(:geo_file){ 'tmp/test_image.geo'  }
       context "with array" do
@@ -26,6 +26,18 @@ module MedusaRestClient
           subject
         }  
       end
+      context "with ankers" do
+        let(:geo_file){ 'tmp/grid3.geo'  }
+        before {
+          setup_empty_dir('tmp')
+          setup_file(geo_file)
+        }
+        it { 
+          #allow(File).to receive(:file?).with(geo_file).and_return(true)
+          #allow(YAML).to receive(:load_file).with(geo_file).and_return({"imageometry" => "[12, 0, 0;0, 13, 0;0, 0, 1]"})
+          subject
+        }  
+      end
     end
 
     describe ".save with new object" do
@@ -39,7 +51,7 @@ module MedusaRestClient
       end
     end
 
-    describe ".save with exsisting object", :current => true do
+    describe ".save with exsisting object" do
       let(:obj){ AttachmentFile.find(1) }
       let(:obj2){ Specimen.find(1)}
       before do
@@ -51,7 +63,6 @@ module MedusaRestClient
       it "calls update" do
         #allow(obj).to receive(:update)
         obj.affine_matrix_in_string = "[1,0,0;0,1,0;0,0,1]"
-        p obj.encode
         obj2.save
         expect(FakeWeb).to have_requested(:put, %r|/specimens/1.json|)
         p FakeWeb.last_request.body
@@ -70,7 +81,6 @@ module MedusaRestClient
         obj.post_multipart_form_data(data)
       end
       it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
-
     end
 
       #data = make_post_data(boundary,self.class.element_name,self.attributes)
@@ -90,21 +100,39 @@ module MedusaRestClient
         AttachmentFile.upload(upload_file, :filename => 'example.txt')
       end
       it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
-      context "with geofile" do
+
+      context "with geofile", :current => true do
+        let(:upload_file){"tmp/grid3.jpg"}
+        let(:geo_file){ "tmp/grid3.geo" }
         before do
+          setup_file(upload_file)
           setup_file(geo_file)
-          AttachmentFile.upload(upload_file, :filename => 'example.txt')
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
+          AttachmentFile.upload(upload_file, :filename => 'grid3.jpg')
         end
         it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
       end
 
       context "with geofile specified in options" do
+        let(:geo_file){ "tmp/example.geo" }
         before do
           setup_file(geo_file)
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
           AttachmentFile.upload(upload_file, :filename => 'example.txt', :geo_path => 'tmp/example.geo')
         end
         it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
       end
+
+      context "with geofile specified in options", :current => true do
+        let(:geo_file){ "tmp/test_image.geo" }
+        before do
+          setup_file(geo_file)
+          allow(File).to receive(:file?).with(geo_file).and_return(true)
+          AttachmentFile.upload(upload_file, :filename => 'example.txt', :geo_path => 'tmp/test_image.geo')
+        end
+        it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+      end
+
     end
 
     describe "#length" do

@@ -143,7 +143,6 @@ module MedusaRestClient
     def to_multipart_form_data(opts = {})
       boundary = opts[:boundary] || @@boundary
       model = opts[:model] || self.class.element_name
-
       path = attributes.delete('file')
       data = []
       attributes.each do |key , value|
@@ -154,7 +153,6 @@ module MedusaRestClient
           data << value
         end
       end
-
       if path
         if opts[:geo_path]
           geo_path = opts[:geo_path]
@@ -164,10 +162,19 @@ module MedusaRestClient
           geo_path = File.join(dirname,basename + ".geo")
         end
         if File.file?(geo_path)
-          data << "--#{boundary}"
-          data << "Content-disposition: form-data; name=\"#{model}[affine_matrix_in_string]\""
-          data << ""
-          data << AttachmentFile.get_affine_from_geo(geo_path)
+          if corners_on_world_in_string = AttachmentFile.get_corners_on_world_from_geo(geo_path)
+            data << "--#{boundary}"
+            data << "Content-disposition: form-data; name=\"#{model}[corners_on_world_in_string]\""
+            data << ""
+            data << corners_on_world_in_string
+          elsif affine_matrix_in_string = AttachmentFile.get_affine_from_geo(geo_path)
+          #if affine_matrix_in_string
+            data << "--#{boundary}"
+            data << "Content-disposition: form-data; name=\"#{model}[affine_matrix_in_string]\""
+            data << ""
+            data << affine_matrix_in_string
+            #data << AttachmentFile.get_affine_from_geo(geo_path)
+          end
         end
 
         filename = attributes.delete('filename') || File.basename(path)
