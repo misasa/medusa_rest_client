@@ -8,7 +8,8 @@ module Warning
   def warn(str)
     return if str.match?("gems")
 
-    super
+    # Kernel#warn calls Warning.warn; forwarding to it would recurse.
+    $stderr.write(str)
   end
 end
 
