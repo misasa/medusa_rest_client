@@ -41,7 +41,7 @@ module MedusaRestClient
     end
 
     describe ".save with new object" do
-      let(:obj){ FactoryGirl.build(:attachment_file) }
+      let(:obj){ FactoryBot.build(:attachment_file) }
       before do
         obj
       end
@@ -55,17 +55,16 @@ module MedusaRestClient
       let(:obj){ AttachmentFile.find(1) }
       let(:obj2){ Specimen.find(1)}
       before do
-        FactoryGirl.remote(:attachment_file, id: 1)
-        FakeWeb.register_uri(:put, %r|/attachment_files/1.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])
-        FactoryGirl.remote(:specimen, id: 1)
-        FakeWeb.register_uri(:put, %r|/specimens/1.json|, :body => FactoryGirl.build(:specimen).to_json, :status => ["201", "Created"])
+        FactoryBot.remote(:attachment_file, id: 1)
+        stub_request(:put, %r|/attachment_files/1.json|).to_return(:body => FactoryBot.build(:attachment_file).to_json, :status => ["201", "Created"])
+        FactoryBot.remote(:specimen, id: 1)
+        stub_request(:put, %r|/specimens/1.json|).to_return(:body => FactoryBot.build(:specimen).to_json, :status => ["201", "Created"])
       end
       it "calls update" do
         #allow(obj).to receive(:update)
         obj.affine_matrix_in_string = "[1,0,0;0,1,0;0,0,1]"
         obj2.save
-        expect(FakeWeb).to have_requested(:put, %r|/specimens/1.json|)
-        p FakeWeb.last_request.body
+        expect(WebMock).to have_requested(:put, %r|/specimens/1.json|)
       end
     end
 
@@ -77,10 +76,10 @@ module MedusaRestClient
         setup_file(upload_file)
         obj
         data = obj.to_multipart_form_data
-        FakeWeb.register_uri(:post, %r|/attachment_files.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])        
+        stub_request(:post, %r|/attachment_files.json|).to_return(:body => FactoryBot.build(:attachment_file).to_json, :status => ["201", "Created"])
         obj.post_multipart_form_data(data)
       end
-      it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+      it { expect(WebMock).to have_requested(:post, %r|/attachment_files.json|) }
     end
 
       #data = make_post_data(boundary,self.class.element_name,self.attributes)
@@ -96,10 +95,10 @@ module MedusaRestClient
       before do
         setup_empty_dir('tmp')
         setup_file(upload_file)
-        FakeWeb.register_uri(:post, %r|/attachment_files.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])
+        stub_request(:post, %r|/attachment_files.json|).to_return(:body => FactoryBot.build(:attachment_file).to_json, :status => ["201", "Created"])
         AttachmentFile.upload(upload_file, :filename => 'example.txt')
       end
-      it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+      it { expect(WebMock).to have_requested(:post, %r|/attachment_files.json|) }
 
       context "with geofile", :current => true do
         let(:upload_file){"tmp/grid3.jpg"}
@@ -110,7 +109,7 @@ module MedusaRestClient
           allow(File).to receive(:file?).with(geo_file).and_return(true)
           AttachmentFile.upload(upload_file, :filename => 'grid3.jpg')
         end
-        it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+        it { expect(WebMock).to have_requested(:post, %r|/attachment_files.json|).twice }
       end
 
       context "with geofile specified in options" do
@@ -120,7 +119,7 @@ module MedusaRestClient
           allow(File).to receive(:file?).with(geo_file).and_return(true)
           AttachmentFile.upload(upload_file, :filename => 'example.txt', :geo_path => 'tmp/example.geo')
         end
-        it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+        it { expect(WebMock).to have_requested(:post, %r|/attachment_files.json|).twice }
       end
 
       context "with geofile specified in options", :current => true do
@@ -130,7 +129,7 @@ module MedusaRestClient
           allow(File).to receive(:file?).with(geo_file).and_return(true)
           AttachmentFile.upload(upload_file, :filename => 'example.txt', :geo_path => 'tmp/test_image.geo')
         end
-        it { expect(FakeWeb).to have_requested(:post, %r|/attachment_files.json|) }
+        it { expect(WebMock).to have_requested(:post, %r|/attachment_files.json|).twice }
       end
 
     end

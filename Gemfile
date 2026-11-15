@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in medusa_rest_client.gemspec
 gemspec
 
-gem 'activeresource', github: 'rails/activeresource', ref: 'dedecf90996622776b7aa0e54957ffc8fb3ac2f9'
+# FactoryBot 6.4 uses argument forwarding despite allowing Ruby 2.6 in its metadata.
+gem 'factory_bot', '~> 6.2.1' if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7')

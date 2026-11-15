@@ -38,13 +38,14 @@ end
 
 global_options = {}
 global = OptionParser.new do |opts|
-  opts.banner = "medusa: an client for Medusa"
+  opts.banner = "medusa: a client for Medusa"
   opts.define_head "Usage: medusa [options] [subcommand [options]]"
   opts.separator ""
   opts.separator "Commands:"
   opts.separator "  medusa console"
   opts.separator "  medusa console -e'p Specimen.find(:first)'" 
-  opts.separator "  medusa upload <file>"
+  opts.separator "  medusa upload <file>..."
+  opts.separator "  medusa remove <global-ID>..."
   opts.separator "" 
   opts.separator "Examples:"
   opts.separator "  medusa upload -h"
@@ -72,11 +73,11 @@ subcommands = {
     opts.banner = "Usage: medusa upload <file>..."
   end,
   'remove' => OptionParser.new do |opts|
-    opts.banner = "Uage: medusa remove <global-ID>..."
+    opts.banner = "Usage: medusa remove <global-ID>..."
   end,
   'console' => OptionParser.new do |opts|
     opts.banner = "Usage: medusa console"
-    opts.on("-e command", "Specifies script from command-line.") do |v|
+    opts.on("-e command", "Run a Ruby script from the command line.") do |v|
       @script = v
     end   
   end
@@ -89,10 +90,9 @@ command = ARGV.shift
 subcommands[command].order! if subcommands[command]
 
 if global_options[:verbose]
-  puts "global_optios: #{global_options}"
+  puts "global_options: #{global_options}"
   if subcommands[command]
     puts "command: #{command}"
-    puts "commad_options: #{command_options}"
   end
 end
 

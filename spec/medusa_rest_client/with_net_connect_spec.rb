@@ -7,8 +7,8 @@ module MedusaRestClient
   describe Surface do
     before do
       setup
-      FakeWeb.clean_registry
-      FakeWeb.allow_net_connect = true
+      WebMock.reset!
+      WebMock.allow_net_connect!
     end
 
     describe "table" do
@@ -99,15 +99,15 @@ module MedusaRestClient
 
 
     after do
-      FakeWeb.allow_net_connect = false
+      WebMock.disable_net_connect!
     end   
   end
 
   describe AttachmentFile, :current => true do
     before do
       setup
-      FakeWeb.clean_registry
-      FakeWeb.allow_net_connect = true
+      WebMock.reset!
+      WebMock.allow_net_connect!
     end
 
     
@@ -136,15 +136,15 @@ module MedusaRestClient
 
 
     after do
-      FakeWeb.allow_net_connect = false
+      WebMock.disable_net_connect!
     end   
   end
 
   describe Box do
     before do
       setup
-      FakeWeb.clean_registry
-      FakeWeb.allow_net_connect = true
+      WebMock.reset!
+      WebMock.allow_net_connect!
     end
 
                 describe "relatives" do
@@ -196,15 +196,15 @@ module MedusaRestClient
     end
 
     after do
-      FakeWeb.allow_net_connect = false
+      WebMock.disable_net_connect!
     end
   end
 
         describe Bib do
     before do
       setup
-      FakeWeb.clean_registry
-      FakeWeb.allow_net_connect = true
+      WebMock.reset!
+      WebMock.allow_net_connect!
     end
           describe "relatives" do
             subject { bib.relatives << obj }
@@ -228,15 +228,15 @@ module MedusaRestClient
             end
           end
     after do
-      FakeWeb.allow_net_connect = false
+      WebMock.disable_net_connect!
     end
         end
 
   describe Specimen do
     before do
       setup
-      FakeWeb.clean_registry
-      FakeWeb.allow_net_connect = true
+      WebMock.reset!
+      WebMock.allow_net_connect!
     end
 
 
@@ -291,7 +291,7 @@ module MedusaRestClient
     end
 
     after do
-      FakeWeb.allow_net_connect = false
+      WebMock.disable_net_connect!
     end
   end
   end

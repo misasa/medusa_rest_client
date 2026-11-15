@@ -26,15 +26,15 @@ module MedusaRestClient
           file.read
         end
       }
-      let(:obj){ FactoryGirl.remote(:stone)}
+      let(:obj){ FactoryBot.remote(:stone)}
       before do
         obj
-        FakeWeb.register_uri(:get, %r|/records/#{global_id}.json|, :body => body, :status => ["200", "Ok"])
+        stub_request(:get, %r|/records/#{global_id}.json|).to_return(:body => body, :status => ["200", "Ok"])
       end
 
       it {
         subject 
-        expect(FakeWeb).to have_requested(:get, %r|/records/#{global_id}.json|) 
+        expect(WebMock).to have_requested(:get, %r|/records/#{global_id}.json|)
       }
     end
 
@@ -43,15 +43,15 @@ module MedusaRestClient
       let(:filename){ global_id + ".pml"}
       let(:global_id){ '0000-001' }
       let(:opts){ {} }
-      let(:obj){ FactoryGirl.remote(:stone)}
+      let(:obj){ FactoryBot.remote(:stone)}
       before do
         obj
-        FakeWeb.register_uri(:get, %r|/records/#{global_id}/casteml|, :body => nil, :status => ["200", "Ok"])
+        stub_request(:get, %r|/records/#{global_id}/casteml|).to_return(:body => nil, :status => ["200", "Ok"])
       end
 
       it {
         subject 
-        expect(FakeWeb).to have_requested(:get, %r|/records/#{global_id}/casteml|) 
+        expect(WebMock).to have_requested(:get, %r|/records/#{global_id}/casteml|)
       }
 
       after do
@@ -66,13 +66,13 @@ module MedusaRestClient
       let(:opts){ {} }
       before do
         #obj
-        FakeWeb.register_uri(:get, %r|/records/#{global_id}.json|, :body => FactoryGirl.remote(:stone).to_json, :status => ["200", "Ok"])
+        stub_request(:get, %r|/records/#{global_id}.json|).to_return(:body => FactoryBot.remote(:stone).to_json, :status => ["200", "Ok"])
 #       Record.download_single(arg, opts)
       end
 
       it { 
         subject
-        expect(FakeWeb).to have_requested(:get, %r|/records/#{global_id}.json|) 
+        expect(WebMock).to have_requested(:get, %r|/records/#{global_id}.json|)
       # expect(File.exists?(filename)).to be_truthy
       }
 
@@ -86,7 +86,7 @@ module MedusaRestClient
       context "with root path" do
         subject{ Record.box?(arg) }
         let(:arg){ '/' }
-        let(:obj){ FactoryGirl.remote(:box) }
+        let(:obj){ FactoryBot.remote(:box) }
         before do
           allow(Record).to receive(:find_by_id_or_path).and_return(obj)
         end
@@ -100,7 +100,7 @@ module MedusaRestClient
       context "with box's global_id" do
         subject{ Record.box?(arg) }
         let(:arg){ '0000-001' }
-        let(:obj){ FactoryGirl.remote(:box) }
+        let(:obj){ FactoryBot.remote(:box) }
         it { 
           expect(Record).to receive(:find_by_id_or_path).with(arg).and_return(obj)
           subject 
@@ -111,7 +111,7 @@ module MedusaRestClient
       context "with box's path" do
         subject{ Record.box?(arg) }
         let(:arg){ '/A/B/C' }
-        let(:obj){ FactoryGirl.remote(:box) }
+        let(:obj){ FactoryBot.remote(:box) }
         before do
           allow(Record).to receive(:find_by_id_or_path).and_return(obj)
         end
@@ -124,7 +124,7 @@ module MedusaRestClient
       context "with stone's global_id" do
         subject{ Record.box?(arg) }
         let(:arg){ '0000-001' }
-        let(:obj){ FactoryGirl.remote(:stone) }
+        let(:obj){ FactoryBot.remote(:stone) }
         before do
           allow(Record).to receive(:find_by_id_or_path).with(arg).and_return(obj)
         end
@@ -139,7 +139,7 @@ module MedusaRestClient
       context "with global_id" do
         subject{ Record.entries(arg) }
         let(:arg){ '0000-001' }
-        let(:obj){ FactoryGirl.remote(:box) }
+        let(:obj){ FactoryBot.remote(:box) }
         before do
           allow(Record).to receive(:find_by_id_or_path).with(arg).and_return([])
         end

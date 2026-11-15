@@ -15,7 +15,7 @@ module MedusaRestClient
     end
 
     def self.upload(filepath, opts = {})
-      raise "#{filepath} does not exist" unless File.exists?(filepath)
+      raise "#{filepath} does not exist" unless File.exist?(filepath)
       obj = AttachmentFile.create(opts.merge(:file => filepath))
       obj
     end
@@ -30,7 +30,7 @@ module MedusaRestClient
     end
 
     def update_file(filepath, opts = {})
-      raise "#{filepath} does not exist" unless File.exists?(filepath)
+      raise "#{filepath} does not exist" unless File.exist?(filepath)
       self.file = filepath
       self.filename = opts[:filename] if opts[:filename]
       self.geo_path = opts[:geo_path] if opts[:geo_path]
