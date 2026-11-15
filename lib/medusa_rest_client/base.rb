@@ -62,7 +62,7 @@ module MedusaRestClient
       raise "could not find boundary" unless md = data.match(/^--(.*)\r\n/)
       boundary = md[1]
       header ={
-            'Content-Length' => data.length.to_s,
+            'Content-Length' => data.bytesize.to_s,
             'Content-Type' => "multipart/form-data; boundary=#{boundary}",
             'Accept' => 'application/json'
           }
@@ -77,7 +77,7 @@ module MedusaRestClient
       raise "could not find boundary" unless md = data.match(/^--(.*)\r\n/)
       boundary = md[1]
       header ={
-            'Content-Length' => data.length.to_s,
+            'Content-Length' => data.bytesize.to_s,
             'Content-Type' => "multipart/form-data; boundary=#{boundary}",
             'Accept' => 'application/json'
           }
@@ -190,7 +190,8 @@ module MedusaRestClient
         }
         data << "--#{boundary}--"
       end
-      data.join("\r\n")
+      # Multipart bodies combine UTF-8 metadata with arbitrary file bytes.
+      data.map { |part| [part].join("\r\n").b }.join("\r\n".b)
     end
 
     def self.find_or_create_by_name(name, params = {})
