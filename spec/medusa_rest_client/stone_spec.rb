@@ -4,7 +4,7 @@ module MedusaRestClient
   describe Stone do
     before do
       setup
-      FakeWeb.clean_registry
+      WebMock.reset!
     end
 
 
@@ -96,7 +96,7 @@ module MedusaRestClient
       let(:stone_id) { 10 }
       let(:box_id){ 100 }
       before do
-        FactoryGirl.remote(:stone, id: stone_id, box_id: box_id)
+        FactoryBot.remote(:stone, id: stone_id, box_id: box_id)
       end
       it { 
         expect(Box).to receive(:find).with(box_id)
@@ -109,11 +109,11 @@ module MedusaRestClient
       before do
         setup_empty_dir('tmp')
         setup_file(upload_file)
-        stone = FactoryGirl.build(:stone, id: 10)
-        FakeWeb.register_uri(:post, %r|/specimens/10/attachment_files.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])               
+        stone = FactoryBot.build(:stone, id: 10)
+        stub_request(:post, %r|/specimens/10/attachment_files.json|).to_return(:body => FactoryBot.build(:attachment_file).to_json, :status => ["201", "Created"])
         stone.upload_file(:file => upload_file, :filename => 'example.txt')
       end
-      it { expect(FakeWeb).to have_requested(:post, %r|/specimens/10/attachment_files.json|) }
+      it { expect(WebMock).to have_requested(:post, %r|/specimens/10/attachment_files.json|) }
     end
 
     describe "#upload_file with tmpfile" do
@@ -125,11 +125,11 @@ module MedusaRestClient
         temp.close
         #setup_empty_dir('tmp')
         #setup_file(upload_file)
-        stone = FactoryGirl.build(:stone, id: 10)
-        FakeWeb.register_uri(:post, %r|/specimens/10/attachment_files.json|, :body => FactoryGirl.build(:attachment_file).to_json, :status => ["201", "Created"])               
+        stone = FactoryBot.build(:stone, id: 10)
+        stub_request(:post, %r|/specimens/10/attachment_files.json|).to_return(:body => FactoryBot.build(:attachment_file).to_json, :status => ["201", "Created"])
         stone.upload_file(:file => temp.path, :filename => 'example.txt')
       end
-      it { expect(FakeWeb).to have_requested(:post, %r|/specimens/10/attachment_files.json|) }
+      it { expect(WebMock).to have_requested(:post, %r|/specimens/10/attachment_files.json|) }
     end
 
 

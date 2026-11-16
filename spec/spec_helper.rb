@@ -1,25 +1,38 @@
-require 'medusa_rest_client'
-require 'factory_girl'
-require 'fakeweb'
-require 'fakeweb_matcher'
+require 'tmpdir'
+require 'fileutils'
+
+# Never read or write the developer's Medusa credentials.
+TEST_HOME = Dir.mktmpdir('medusa-spec-')
+ORIGINAL_HOME = ENV['HOME']
+ENV['HOME'] = TEST_HOME
+File.write(File.join(TEST_HOME, '.orochirc'), "---\nuri: http://app_development:3000/stone/\nuser: dream.misasa\npassword: password\n")
+at_exit do
+  ENV['HOME'] = ORIGINAL_HOME
+  FileUtils.remove_entry(TEST_HOME) if File.directory?(TEST_HOME)
+end
+
+Dir.chdir(TEST_HOME) { require 'medusa_rest_client' }
+require 'factory_bot'
+require 'webmock/rspec'
 #require 'simplecov'
 #require 'simplecov-rcov'
 #SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 #SimpleCov.start
 ActiveResource::Base.logger = Logger.new(STDOUT) # 追記
 
-module FactoryGirl
+module FactoryBot
   class RemoteStrategy
+      include WebMock::API
       def initialize
-        @strategy = FactoryGirl.strategy_by_name(:build).new
+        @strategy = FactoryBot.strategy_by_name(:build).new
       end
 
       delegate :association, to: :@strategy
 
       def result(evaluation)
         @strategy.result(evaluation).tap do |e|
-          FakeWeb.register_uri(:get, self.class.entity_url(e), body: self.class.entity_hash(e).to_json)
-          FakeWeb.register_uri(:put, self.class.entity_url(e), body: self.class.entity_hash(e).to_json)
+          stub_request(:get, self.class.entity_url(e)).to_return(body: self.class.entity_hash(e).to_json)
+          stub_request(:put, self.class.entity_url(e)).to_return(body: self.class.entity_hash(e).to_json)
           remote_search(e, search: { :"#{e.class.primary_key}_eq" => e.public_send(e.class.primary_key) })
           remote_search(e, search: { :"#{e.class.primary_key}_in" => [e.public_send(e.class.primary_key)] })
           evaluation.notify(:after_remote, e) # runs after(:remote) callback
@@ -37,10 +50,10 @@ module FactoryGirl
           end
           # Set has_many <association> instead of each <association(s)>_ids.
           attributes.map do |k, v|
-            next unless k.to_s =~ /^(\w+)_ids$/ && FactoryGirl.factories.map(&:name).include?(f = $1.singularize.to_sym) && v.is_a?(Array)
+            next unless k.to_s =~ /^(\w+)_ids$/ && FactoryBot.factories.map(&:name).include?(f = $1.singularize.to_sym) && v.is_a?(Array)
             [k, v, f, $1.pluralize.to_sym]
           end.compact.each do |k, v, f, r|
-            attributes[r] = v.map { |id| FactoryGirl.remote(f, id: id) }
+            attributes[r] = v.map { |id| FactoryBot.remote(f, id: id) }
             attributes.delete(k)
           end
           # Serilaize has_many associations.
@@ -54,32 +67,31 @@ module FactoryGirl
         end
 
         def entity_url(entity)
-          "#{entity.class.site_with_userinfo}#{entity.class.prefix}#{entity.class.collection_name}/#{entity.id}.json"
+          "#{entity.class.site}#{entity.class.prefix}#{entity.class.collection_name}/#{entity.id}.json"
         end
 
         def collection_url(collection)
-          (collection.first.is_a?(Class) ? collection.first : collection.first.class).instance_eval { "#{site_with_userinfo}#{prefix}#{collection_name}.json" }
+          (collection.first.is_a?(Class) ? collection.first : collection.first.class).instance_eval { "#{site}#{prefix}#{collection_name}.json" }
         end
       end
   end
 end
 
-FactoryGirl.register_strategy(:remote, FactoryGirl::RemoteStrategy)
+FactoryBot.register_strategy(:remote, FactoryBot::RemoteStrategy)
 def remote_search(*args)
   params = args.extract_options!
   collection = args.flatten
-  FakeWeb.register_uri(:get, "#{FactoryGirl::RemoteStrategy.collection_url(collection)}?#{params.to_query}",
-    body: (collection.first.is_a?(Class) ? "[]" : collection.map { |e| FactoryGirl::RemoteStrategy.entity_hash(e) }.to_json))
+  stub_request(:get, "#{FactoryBot::RemoteStrategy.collection_url(collection)}?#{params.to_query}").to_return(body: (collection.first.is_a?(Class) ? "[]" : collection.map { |e| FactoryBot::RemoteStrategy.entity_hash(e) }.to_json))
 end
 
 
 Dir.glob("spec/support/**/*.rb") { |f| load f, true }
 
 
-FakeWeb.allow_net_connect = true
+WebMock.disable_net_connect!
 
 include MedusaRestClient
-FactoryGirl.find_definitions
+FactoryBot.find_definitions
 Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
 
 def setup
@@ -146,7 +158,9 @@ def filename_for(path, opts = {})
 end
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include WebMock::API
+  config.before { setup }
+  config.include FactoryBot::Syntax::Methods
   config.mock_with :rspec do |c|
     c.syntax = [:should, :expect]
   end

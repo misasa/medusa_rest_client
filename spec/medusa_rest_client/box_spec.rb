@@ -4,7 +4,7 @@ module MedusaRestClient
   describe Box do
     before do
       setup
-      FakeWeb.clean_registry
+      WebMock.reset!
     end
 
     describe "entries" do
@@ -70,27 +70,27 @@ module MedusaRestClient
 
     describe "inventory" do
       subject{ box.inventory item}
-      let(:box){ FactoryGirl.remote(:box, id: box_id) }
+      let(:box){ FactoryBot.remote(:box, id: box_id) }
       let(:box_id){ 10 }
       context "with specimen" do
-        let(:item){ FactoryGirl.remote(:specimen, id: 100) }
+        let(:item){ FactoryBot.remote(:specimen, id: 100) }
         before do
-          FakeWeb.register_uri(:post, %r|/boxes/#{box.id}/specimens/#{item.id}/inventory.json|, :body => [].to_json, :status => ["200", ""])                                
+          stub_request(:post, %r|/boxes/#{box.id}/specimens/#{item.id}/inventory.json|).to_return(:body => [].to_json, :status => ["200", ""])
         end
         it {
           subject
-          expect(FakeWeb).to have_requested(:post, %r|/boxes/#{box.id}/specimens/#{item.id}/inventory.json|)
+          expect(WebMock).to have_requested(:post, %r|/boxes/#{box.id}/specimens/#{item.id}/inventory.json|)
         }
       end
 
       context "with box" do
-        let(:item){ FactoryGirl.remote(:box, id: 200 ) }
+        let(:item){ FactoryBot.remote(:box, id: 200 ) }
         before do
-          FakeWeb.register_uri(:post, %r|/boxes/#{box.id}/boxes/#{item.id}/inventory.json|, :body => [].to_json, :status => ["200", ""])                                
+          stub_request(:post, %r|/boxes/#{box.id}/boxes/#{item.id}/inventory.json|).to_return(:body => [].to_json, :status => ["200", ""])
         end
         it {
           subject
-          expect(FakeWeb).to have_requested(:post, %r|/boxes/#{box.id}/boxes/#{item.id}/inventory.json|)
+          expect(WebMock).to have_requested(:post, %r|/boxes/#{box.id}/boxes/#{item.id}/inventory.json|)
         }
       end
 
@@ -98,7 +98,7 @@ module MedusaRestClient
     
     describe "parent" do
       subject{ box.parent }
-      let(:box){ FactoryGirl.remote(:box, id: box_id, parent_id: parent_id) }
+      let(:box){ FactoryBot.remote(:box, id: box_id, parent_id: parent_id) }
       let(:box_id){ 10 }
       context "with existing parent_id" do
         let(:parent_id){ 11 }
@@ -126,7 +126,7 @@ module MedusaRestClient
 
     describe "box" do
       subject{ box.box }
-      let(:box){ FactoryGirl.remote(:box, id: box_id, parent_id: parent_id) }
+      let(:box){ FactoryBot.remote(:box, id: box_id, parent_id: parent_id) }
       let(:box_id){ 10 }
       let(:parent_id){ 11 }
       before do
@@ -149,7 +149,7 @@ module MedusaRestClient
 
     describe "pwd" do
       subject{ Box.pwd } 
-      let(:box){ FactoryGirl.remote(:box, id: box_id, global_id: global_id, name: 'test-box') }
+      let(:box){ FactoryBot.remote(:box, id: box_id, global_id: global_id, name: 'test-box') }
       let(:box_id){ 10 }
       let(:global_id){ '1111-001' }
       context "when valid pwd_id" do
@@ -180,7 +180,7 @@ module MedusaRestClient
 
     describe "find_by_path" do
       subject { Box.find_by_path(path) }
-      let(:box){ FactoryGirl.remote(:box) }
+      let(:box){ FactoryBot.remote(:box) }
 
       context "with absolute path" do
         let(:path){'/ISEI/main'}
@@ -223,7 +223,7 @@ module MedusaRestClient
 
     describe "home=" do
       subject{ Box.home = home_path } 
-      let(:home){ FactoryGirl.remote(:box) }
+      let(:home){ FactoryBot.remote(:box) }
       let(:global_id){ '000-001' }
       let(:home_path){ '/ISEI/main'}
       it {
@@ -303,24 +303,24 @@ module MedusaRestClient
     end
 
     describe "relatives" do
-      let(:stone_1) { FactoryGirl.build(:stone)}
+      let(:stone_1) { FactoryBot.build(:stone)}
       let(:obj) { Box.find(obj_id)}
       let(:obj_id) { 10 }
       before do
-        FactoryGirl.remote(:box, id: obj_id)
-        FakeWeb.register_uri(:post, %r|/boxes/#{obj.id}/specimens.json|, :body => nil, :status => ["201", ""])                        
+        FactoryBot.remote(:box, id: obj_id)
+        stub_request(:post, %r|/boxes/#{obj.id}/specimens.json|).to_return(:body => nil, :status => ["201", ""])
         obj.relatives << stone_1
       end
       it { expect(nil).to be_nil }
     end
 
     describe "stones" do
-      let(:stone_1) { FactoryGirl.build(:stone)}
+      let(:stone_1) { FactoryBot.build(:stone)}
       let(:obj) { Box.find(obj_id)}
       let(:obj_id) { 10 }
       before do
-        FactoryGirl.remote(:box, id: obj_id)
-        FakeWeb.register_uri(:post, %r|/boxes/#{obj.id}/specimens.json|, :body => nil, :status => ["201", ""])                        
+        FactoryBot.remote(:box, id: obj_id)
+        stub_request(:post, %r|/boxes/#{obj.id}/specimens.json|).to_return(:body => nil, :status => ["201", ""])
         obj.stones << stone_1
       end
       it { expect(nil).to be_nil }

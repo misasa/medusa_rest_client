@@ -6,40 +6,40 @@ module MedusaRestClient
     describe "without subclass" do
       before do
         setup
-        FakeWeb.clean_registry
+        WebMock.reset!
       end
   
       let(:association){ MyAssociation.new(obj) }
       let(:obj) { Box.find(obj_id)}
       let(:obj_id) { 10 }
-      let(:stone_1){ FactoryGirl.build(:stone) }
-      let(:box_1){ FactoryGirl.build(:box) }
-      let(:box_2){ FactoryGirl.build(:box) }        
+      let(:stone_1){ FactoryBot.build(:stone) }
+      let(:box_1){ FactoryBot.build(:box) }
+      let(:box_2){ FactoryBot.build(:box) }
       before do
         setup
-        FactoryGirl.remote(:box, id: obj_id)
+        FactoryBot.remote(:box, id: obj_id)
       end
 
       context "#<<" do
         before do
-          FakeWeb.register_uri(:post, %r|#{association.collection_path(stone_1)}|, :body => nil, :status => ["201", ""])                        
+          stub_request(:post, %r|#{association.collection_path(stone_1)}|).to_return(:body => nil, :status => ["201", ""])
           association << stone_1
         end
-        it { expect(FakeWeb).to have_requested(:post, %r|#{association.collection_path(stone_1)}|) }
+        it { expect(WebMock).to have_requested(:post, %r|#{association.collection_path(stone_1)}|) }
       end
 
       context "#.to_a" do
         before do
-          FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/specimens.json|, :body => [stone_1].to_json, :status => ["200", ""])                        
-          FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/boxes.json|, :body => [box_1, box_2].to_json, :status => ["200", ""])                       
-          FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/attachment_files.json|, :body => [].to_json, :status => ["200", ""])                        
-          FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/bibs.json|, :body => [].to_json, :status => ["200", ""])                        
+          stub_request(:get, %r|boxes/#{obj.id}/specimens.json|).to_return(:body => [stone_1].to_json, :status => ["200", ""])
+          stub_request(:get, %r|boxes/#{obj.id}/boxes.json|).to_return(:body => [box_1, box_2].to_json, :status => ["200", ""])
+          stub_request(:get, %r|boxes/#{obj.id}/attachment_files.json|).to_return(:body => [].to_json, :status => ["200", ""])
+          stub_request(:get, %r|boxes/#{obj.id}/bibs.json|).to_return(:body => [].to_json, :status => ["200", ""])
           association.to_a
         end
-        it { expect(FakeWeb).to have_requested(:get, %r|boxes/#{obj.id}/specimens.json|) }        
-        it { expect(FakeWeb).to have_requested(:get, %r|boxes/#{obj.id}/boxes.json|) }        
-        it { expect(FakeWeb).to have_requested(:get, %r|boxes/#{obj.id}/attachment_files.json|) }       
-        it { expect(FakeWeb).to have_requested(:get, %r|boxes/#{obj.id}/bibs.json|) }       
+        it { expect(WebMock).to have_requested(:get, %r|boxes/#{obj.id}/specimens.json|) }
+        it { expect(WebMock).to have_requested(:get, %r|boxes/#{obj.id}/boxes.json|) }
+        it { expect(WebMock).to have_requested(:get, %r|boxes/#{obj.id}/attachment_files.json|) }
+        it { expect(WebMock).to have_requested(:get, %r|boxes/#{obj.id}/bibs.json|) }
       end
 
     end
@@ -49,26 +49,26 @@ module MedusaRestClient
       let(:obj) { Box.find(obj_id)}
       let(:obj_id) { 10 }
       let(:stones) { [stone_1] }
-      let(:stone_1){ FactoryGirl.build(:stone) }
+      let(:stone_1){ FactoryBot.build(:stone) }
 
       before do
         setup
-        FactoryGirl.remote(:box, id: obj_id)
-        FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/stones.json|, :body => stones.to_json, :status => ["200", ""])                        
+        FactoryBot.remote(:box, id: obj_id)
+        stub_request(:get, %r|boxes/#{obj.id}/specimens.json|).to_return(:body => stones.to_json, :status => ["200", ""])
       end
       context "#to_a" do
         before do
           association.to_a
         end
-        it { expect(FakeWeb).to have_requested(:get, %r|boxes/#{obj.id}/specimens.json|) }
+        it { expect(WebMock).to have_requested(:get, %r|boxes/#{obj.id}/specimens.json|) }
       end
 
       context "#<<" do
         before do
-          FakeWeb.register_uri(:post, %r|#{association.collection_path(stone_1)}|, :body => nil, :status => ["201", ""])                        
+          stub_request(:post, %r|#{association.collection_path(stone_1)}|).to_return(:body => nil, :status => ["201", ""])
           association << stone_1
         end
-        it { expect(FakeWeb).to have_requested(:post, %r|#{association.collection_path(stone_1)}|) }
+        it { expect(WebMock).to have_requested(:post, %r|#{association.collection_path(stone_1)}|) }
       end
 
       context "#inspect" do
@@ -92,7 +92,7 @@ module MedusaRestClient
 
       context "#.empty?" do
         before do
-          FakeWeb.register_uri(:get, %r|boxes/#{obj.id}/specimens.json|, :body => [].to_json, :status => ["200", ""])                   
+          stub_request(:get, %r|boxes/#{obj.id}/specimens.json|).to_return(:body => [].to_json, :status => ["200", ""])
           association
         end
         it {

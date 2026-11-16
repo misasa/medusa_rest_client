@@ -4,7 +4,7 @@ module MedusaRestClient
   describe BoxRoot do
     before do
       setup
-      FakeWeb.clean_registry
+      WebMock.reset!
     end
 
     describe "new" do

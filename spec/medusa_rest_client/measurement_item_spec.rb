@@ -26,12 +26,12 @@ module MedusaRestClient
       let(:nickname){ 'Be-deleteme' }
       before do
         nickname
-        FakeWeb.register_uri(:post, %r|/measurement_items.json|, :body => {:id => 1, :name => "hello"}.to_json, :status => ["201", "Created"])                        
+        stub_request(:post, %r|/measurement_items.json|).to_return(:body => {:id => 1, :name => "hello"}.to_json, :status => ["201", "Created"])
       end
       it {  
         expect(MeasurementItem).to receive(:find).with(:first, {:params=>{:q=>{:nickname_eq=>"Be-deleteme"}}}) 
         subject
-        expect(FakeWeb).to have_requested(:post, %r|/measurement_items.json|)         
+        expect(WebMock).to have_requested(:post, %r|/measurement_items.json|)
       }
     end
     

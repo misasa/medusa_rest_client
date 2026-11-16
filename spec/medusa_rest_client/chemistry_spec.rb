@@ -9,15 +9,15 @@ module MedusaRestClient
 
     describe "analysis.chemistries" do
       subject{ analysis.chemistries }
-      let(:analysis){ FactoryGirl.remote(:analysis, id: 2530) }
+      let(:analysis){ FactoryBot.remote(:analysis, id: 2530) }
       before do
         analysis
-        FakeWeb.register_uri(:get, %r|/analyses/#{analysis.id}/chemistries.json|, :body => [].to_json, :status => ["200", ""])                                
+        stub_request(:get, %r|/analyses/#{analysis.id}/chemistries.json|).to_return(:body => [].to_json, :status => ["200", ""])
       end
 
       it { 
         subject
-        expect(FakeWeb).to have_requested(:get, %r|/analyses/#{analysis.id}/chemistries.json|)        
+        expect(WebMock).to have_requested(:get, %r|/analyses/#{analysis.id}/chemistries.json|)
       }
     end
 
@@ -25,7 +25,7 @@ module MedusaRestClient
       #let(:analysis){ Analysis.create(:name => 'deleteme')}
       let(:analysis){ double('analysis', :id => 110, :name => 'test').as_null_object }
       before do
-        FakeWeb.register_uri(:post, %r|/analyses/110/chemistries.json|, :body => {:id => 1, :name => "hello"}.to_json, :status => ["201", "Created"])               
+        stub_request(:post, %r|/analyses/110/chemistries.json|).to_return(:body => {:id => 1, :name => "hello"}.to_json, :status => ["201", "Created"])
       end
       context "with analysis" do
         let(:chemistry_1){ Chemistry.new(:measurement_item_id => 198, :value => 0.123 ) }
@@ -34,7 +34,7 @@ module MedusaRestClient
         end
         #it { expect(analysis).not_to be_nil }
         it { 
-          #expect(FakeWeb).to have_requested(:post, %r|/analyses/110/chemistries.json|)
+          #expect(WebMock).to have_requested(:post, %r|/analyses/110/chemistries.json|)
           expect{ chemistry_1.save }.not_to raise_error
         }
       end
@@ -42,7 +42,7 @@ module MedusaRestClient
       context "with analysis_id" do
         let(:chemistry_1){ Chemistry.new(:measurement_item_id => 198, :value => 0.123, :analysis_id => analysis.id ) }
         it { 
-          #expect(FakeWeb).to have_requested(:post, %r|/analyses/110/chemistries.json|)
+          #expect(WebMock).to have_requested(:post, %r|/analyses/110/chemistries.json|)
           expect{ chemistry_1.save }.not_to raise_error
         }
       end
@@ -60,7 +60,7 @@ module MedusaRestClient
     end
 
     # describe "#unit" do
-    #   let(:chem_1){ FactoryGirl.remote(:chemistry, id: object_id) }
+    #   let(:chem_1){ FactoryBot.remote(:chemistry, id: object_id) }
     #   let(:object_id){ 10 }     
     #   #let(:chem_attrib){ {:analysis_id => analysis.id, :measurement_item_id => 198, :value => 0.155, :unit_id => unit.id} }
     #   let(:analysis){ double(:analysis)}
@@ -69,7 +69,7 @@ module MedusaRestClient
     #     unit
     #     analysis
     #     chem_1
-    #     FakeWeb.register_uri(:get, %r|/analyses/#{analysis.id}/chemistries.json|, :body => [].to_json, :status => ["200", ""])                                
+    #     stub_request(:get, %r|/analyses/#{analysis.id}/chemistries.json|).to_return(:body => [].to_json, :status => ["200", ""])
 
     #   end
     #   it { expect(chem_1.unit).to be_eql(unit) }
@@ -92,7 +92,7 @@ module MedusaRestClient
 
     # end
     after do
-#     FakeWeb.allow_net_connect = false
+#     WebMock.disable_net_connect!
     end
 
   end
